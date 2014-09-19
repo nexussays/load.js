@@ -34,7 +34,7 @@ function load(...files: any[]): load.Promise
          var label = items.labels[x];
          remaining[label] = remaining[label] || 0;
          // if file is empty string, don't prepend root to it
-         var path = file && root && !/^https?:\/\//.test( file ) ? root + file : file;
+         var path = file && root && !/^(?:https?:)?\/\//.test( file ) ? root + file : file;
          if(!written[path])
          {
             remaining[label]++;

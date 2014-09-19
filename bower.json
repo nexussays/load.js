@@ -1,6 +1,6 @@
 {
     "name": "load.js",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "description": "A small, comprehensive script loader for Javascript and TypeScript",
     "homepage": "https://github.com/nexussays/load.js",
     "license": "MPL",

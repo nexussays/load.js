@@ -117,6 +117,11 @@ function setBaseUrl(path: string): void
 
 Prepends this path to all load requests from the point it was called onward.
 
+You an also set a `data-base-url` attribute in the script tag, which is useful if you have templates or otherwise generate this path depending on your environment.
+```html
+<script src="https://assets.domain.com/scripts/init.js" data-base-url="https://assets.domain.com/scripts/"></script>
+```
+
 So...
 ```js
 load.setBaseUrl("/assets/scripts/");
