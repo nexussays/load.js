@@ -18,35 +18,15 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="dist\load.js" />
+    <Content Include="dist\load.min.js" />
     <Content Include="gruntfile.js" />
-    <Content Include="test\advanced.html" />
-    <Content Include="test\basic.html" />
-    <Content Include="test\css\demos.css" />
-    <Content Include="test\index.html" />
-    <Content Include="test\js\bar.js" />
-    <Content Include="test\js\baz.js" />
-    <Content Include="test\js\foo.js" />
-    <Content Include="test\js\thunk.js" />
-    <Content Include="test\tests.js" />
-    <Content Include="test\vendor\bird.png" />
-    <Content Include="test\vendor\head.js" />
-    <Content Include="test\vendor\jquery.js" />
-    <Content Include="test\vendor\lab2.js" />
-    <Content Include="test\vendor\lab2.min.js" />
-    <Content Include="test\vendor\mootools.js" />
-    <Content Include="test\vendor\nulll-label.js" />
-    <Content Include="test\vendor\order-a.js" />
-    <Content Include="test\vendor\order-b.js" />
-    <Content Include="test\vendor\order-c.js" />
-    <Content Include="test\vendor\order-d.js" />
-    <Content Include="test\vendor\patha.js" />
-    <Content Include="test\vendor\pathb.js" />
-    <Content Include="test\vendor\pathc.js" />
-    <Content Include="test\vendor\triple-load.js" />
-    <Content Include="test\vendor\yui-utilities.js" />
+    <Content Include=".travis.yml" />
+    <None Include="bower.json" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="dist\load.d.ts" />
     <TypeScriptCompile Include="src\load.ts" />
   </ItemGroup>
   <ItemGroup>
