@@ -12,7 +12,7 @@ var written: { [path: string]: boolean } = {};
 var root: string;
 var querystring: string;
 
-// on startup, try to find out script tag and see if there is a base-url set
+// on startup, try to find our script tag and see if there is a data-base-url attribute set
 var attr = "data-base-url";
 var us = document.querySelector("script[" + attr +"]" );
 if(us)
