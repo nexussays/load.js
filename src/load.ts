@@ -12,6 +12,14 @@ var written: { [path: string]: boolean } = {};
 var root: string;
 var querystring: string;
 
+// on startup, try to find out script tag and see if there is a base-url set
+var attr = "data-base-url";
+var us = document.querySelector("script[" + attr +"]" );
+if(us)
+{
+   root = (<HTMLScriptElement>us).getAttribute(attr);
+}
+
 function load(file: string): load.Promise;
 function load(fileWithLabel: any): load.Promise;
 function load(...files: any[]): load.Promise;
@@ -133,7 +141,7 @@ function makePromise(dependencies: string[]): PrivatePromise
    return {
       // if this is ever changed to be part of the public promise interface, be sure to slice()
       deps: dependencies,
-      then: function(...args):load.Promise
+      then: function(...args): load.Promise
       {
          load.when( dependencies, args.length == 1 ? args[0] : args );
          // if the onComplete is more dependencies to load, return a new promise
