@@ -9,20 +9,45 @@ module.exports = function(grunt)
    // tasks
    //
    grunt.registerTask( "default", ["build"] );
-   grunt.registerTask( "build", ["ts:build", "wrap"/*, "browserify"*/] );
+   grunt.registerTask( "build", ["ts:build", "wrap" /*, "browserify"*/] );
    grunt.registerTask( "package", ["build", "uglify"] );
    grunt.registerTask( "complete", ["clean", "package"] );
    grunt.registerMultiTask( "wrap", function()
    {
-      var fs = require( "fs" );
-      var mkdirp = require( "mkdirp" );
-      var path = require( "path" );
-
-      mkdirp.sync( path.dirname( this.data.dest ) );
-      var file = fs.readFileSync( this.data.src ).toString();
-      fs.writeFileSync( this.data.dest,
+      var file = grunt.file.read( this.data.src ).toString();
+      grunt.file.write( this.data.dest,
          this.data.header + file.replace( this.data.remove, "" ) + this.data.footer,
          'utf-8' );
+   } );
+   grunt.registerTask( "version", function(type)
+   {
+      var semver = require( 'semver' );
+      var typeValid = /major|minor|patch/.test( type );
+      if(!type || !typeValid)
+      {
+         var pkg = grunt.file.readJSON( "package.json" );
+         grunt.log.writeln( "Current version is " + pkg.version + "\n" +
+            "To increment the version, provide the respective part as an argument.\n" +
+            "grunt " + this.name + ":major => " + semver.inc( pkg.version, "major" ) + "\n" +
+            "grunt " + this.name + ":minor => " + semver.inc( pkg.version, "minor" ) + "\n" +
+            "grunt " + this.name + ":patch => " + semver.inc( pkg.version, "patch" ) );
+         if(type && !typeValid)
+         {
+            grunt.fail.warn( "Invalid version increment \"" + type + "\" provided" );
+         }
+         return;
+      }
+
+      ["package.json", "bower.json"].forEach( function(file)
+      {
+         if(grunt.file.isFile( file ))
+         {
+            var json = grunt.file.readJSON( file );
+            json.version = semver.inc( json.version, type );
+            grunt.file.write( file, JSON.stringify(json, null, arguments.length > 1 ? parseInt(arguments[1]) : 3) );
+            grunt.log.writeln( "Updated " + file + " to " + json.version );
+         }
+      } );
    } );
    //
    // config
