@@ -18,7 +18,7 @@
         "url": "https://github.com/nexussays/load.js.git"
     },
     "scripts": {
-        "test": "testling -x ./.travis/start-$BROWSER.sh"
+        "test": "grunt clean && tapedeck test/*.js -p"
     },
     "testling": {
         "files": "test/*.js",
@@ -45,6 +45,7 @@
         "grunt-ts": "^1.11.13",
         "semver": "^3.0.1",
         "tape": "^3.0.0",
+        "tapedeck": "^0.3.5",
         "testling": "^1.7.0"
     }
 }
