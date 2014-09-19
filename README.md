@@ -124,9 +124,9 @@ Note that this is literally just doing a string concatenation, so make sure your
 ### Loading files in parallel
 
 ```ts
-function load(file: string): promise;
-function load(fileWithLabel: any): promise;
-function load(...files: any[]): promise;
+function load(file: string): Promise;
+function load(fileWithLabel: any): Promise;
+function load(...files: any[]): Promise;
 ```
 
 Provide as many file names (strings) as you'd like and they will all be loaded in parallel:
@@ -140,16 +140,31 @@ var dependencies = ["foo.js", "bar.js", "baz.js"];
 load(dependencies);
 ```
 
+### Labelling files
+
+You can provide a label to single files or to arrays of files to make it easier to reference for dependency management.
+```js
+load("analytics.js")
+    .then({ libs: ["lib/jquery.js", "lib/other-lib.js", "lib/another-lib.js"] });
+```
+
+This allows you reference `libs` to ensure that all three of `lib/jquery.js`, `lib/other-lib.js`, and `lib/another-lib.js` have completed loading without having to type all three file paths out.
+
+This works for single files as well:
+```js
+load({ awesome: "really-awesome-library-v2.14.1932-beta3.min.js" });
+```
+
 ### Loading files, or executing code, sequentially
 
 This is the type returned from `load()`:
 ```ts
-interface promise
+interface Promise
 {
-   then(callback: () => void): promise;
-   then(file: string): promise;
-   then(fileWithLabel: any): promise;
-   then(...files: any[]): promise;
+   then(callback: () => void): Promise;
+   then(file: string): Promise;
+   then(fileWithLabel: any): Promise;
+   then(...files: any[]): Promise;
 }
 ```
 
@@ -182,21 +197,6 @@ load("check-for-things.js").then(function()
 });
 ```
 
-### Labels
-
-You can provide a label to single files or to arrays of files to make it easier to reference for dependency management.
-```js
-load("analytics.js")
-    .then({ libs: ["lib/jquery.js", "lib/other-lib.js", "lib/another-lib.js"] });
-```
-
-The above now let's us reference `libs` when we want to ensure that all three of `lib/jquery.js`, `lib/other-lib.js`, and `lib/another-lib.js` have completed loading without having to repeatedly type all three file paths out.
-
-This works for single files as well:
-```js
-load({ awesome: "really-awesome-library-v2.14.1932-beta3.min.js" });
-```
-
 ### Loading files, or executing code, on completion of certain items
 
 ```ts
@@ -214,7 +214,7 @@ function when(dependency: string, fileWithLabel: any, waiting?: (missing: string
 function when(dependencies: string[], fileWithLabel: any, waiting?: (missing: string[]) => void): void;
 ```
 
-Use `load.when()` to wait for specific dependencies to then load further files or execute code. This is very similar to `then()` but it can be called from another point in your code or provide more specific dependencies.
+Use `load.when()` to wait for specific dependencies and, when they have completed, to then load further files or execute code. This is very similar to `then()` but it can be called from another point in your code or provide more specific dependencies.
 
 Dependencies are either file names or labels, and multiple dependencies can be provided.
 
@@ -225,10 +225,10 @@ load.when("jquery.js", { plugins: ["lib/jquery-plugin1.js", "lib/jquery-plugin2.
 load.when(["libs", "plugins"], "app/my-app-lib.js");
 ```
 
-Note that we load `lib/jquery.js` but only use `jquery.js` in the first call to `when()`. And the second call to `when()` lists two dependencies, `libs`, and `plugins`, both of which are labels.
+Note that the path `lib/jquery.js` is loaded, but only `jquery.js` is used in the first call to `when()`; and the second call to `when()` lists two dependencies, `libs`, and `plugins`, both of which are labels.
 
-You can also call `when()` at any point in your code, even prior to the file being loaded. For example, the following is completely fine and will load everything in the right order:
-
+You can also call `when()` at any point in your code, even prior to the file being loaded.
+For example, the following is completely fine and will load everything in the right order:
 ```js
 load.when(["libs", "plugins"], "app/my-app-lib.js");
 load.when("jquery.js", { plugins: ["lib/jquery-plugin1.js", "lib/jquery-plugin2.js"] });
@@ -245,3 +245,5 @@ function setQuerystring(args: string): void
 You can call `load.setQuerystring` to set query string arguments that will be appended to every loaded file.
 
 This can be useful for rudimentary cache-busting, eg, `load.setQuerystring("rnd=" + Math.random())`.
+
+Note that no calls to `encodeURI()` or `encodeURIComponent()` are made with the provided string, so be sure the argument you provide to `setQuerystring()` has been properly encoded to be a valid querystring.

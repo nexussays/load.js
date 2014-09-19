@@ -12,16 +12,10 @@ var written: { [path: string]: boolean } = {};
 var root: string;
 var querystring: string;
 
-// use internally to retain type info when we need to concatenate dependencies
-interface promisePrivate extends load.promise
-{
-   deps: string[];
-}
-
-function load(file: string): load.promise;
-function load(fileWithLabel: any): load.promise;
-function load(...files: any[]): load.promise;
-function load(...files: any[]): load.promise
+function load(file: string): load.Promise;
+function load(fileWithLabel: any): load.Promise;
+function load(...files: any[]): load.Promise;
+function load(...files: any[]): load.Promise
 {
    var items = tokenize( files );
    //console.log( items );
@@ -127,13 +121,19 @@ function getLabelFromFile(file: string): string
    return file.substring( s == -1 ? 0 : s + 1, e == -1 ? file.length : e );
 }
 
-function makePromise(dependencies: string[]): promisePrivate
+// use internally to retain type info when we neet to concatenate dependencies
+interface PrivatePromise extends load.Promise
+{
+   deps: string[];
+}
+
+function makePromise(dependencies: string[]): PrivatePromise
 {
    //console.log( "makePromise", dependencies );
    return {
       // if this is ever changed to be part of the public promise interface, be sure to slice()
       deps: dependencies,
-      then: function(...args):load.promise
+      then: function(...args):load.Promise
       {
          load.when( dependencies, args.length == 1 ? args[0] : args );
          // if the onComplete is more dependencies to load, return a new promise
@@ -190,12 +190,12 @@ function defer(func)
 
 module load
 {
-   export interface promise
+   export interface Promise
    {
-      then(callback: () => void): promise;
-      then(file: string): promise;
-      then(fileWithLabel: any): promise;
-      then(...files: any[]): promise;
+      then(callback: () => void): Promise;
+      then(file: string): Promise;
+      then(fileWithLabel: any): Promise;
+      then(...files: any[]): Promise;
    }
 
    export function setBaseUrl(path: string): void
