@@ -5,7 +5,7 @@
     "license": "MPL",
     "description": "A small, comprehensive script loader for Javascript and TypeScript",
     "homepage": "https://github.com/nexussays/load.js",
-    "main": "gruntfile.js",
+    "main": "dist/load.js",
     "keywords": [
         "loader",
         "script-loader"
@@ -18,7 +18,6 @@
         "url": "https://github.com/nexussays/load.js.git"
     },
     "scripts": {
-        "build":  "grunt build",
         "test": "echo \"Error: no test specified\" && exit 0"
     },
   "devDependencies": {
