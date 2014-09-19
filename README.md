@@ -12,23 +12,22 @@ Using script tags is bad for three primary reasons:
 
 So this:
 ```html
-<script src="/scripts/analytics.js"></script>
-<script src="/scripts/jquery/jquery.js"></script>
-<script src="/scripts/other-library.js"></script>
-<script src="/scripts/yet-another-library.js"></script>
-<script src="/scripts/jquery/jquery-plugin1.js"></script>
-<script src="/scripts/jquery/jquery-plugin2.js"></script>
-<script src="/scripts/jquery/jquery-plugin3.js"></script>
-<script src="/scripts/app/my-app-lib.js"></script>
-<script src="/scripts/app/my-app-mainjs"></script>
+<script src="/assets/scripts/analytics.js"></script>
+<script src="/assets/scripts/lib/jquery.js"></script>
+<script src="/assets/scripts/lib/other-lib.js"></script>
+<script src="/assets/scripts/lib/another-lib.js"></script>
+<script src="/assets/scripts/lib/jquery-plugin1.js"></script>
+<script src="/assets/scripts/lib/jquery-plugin2.js"></script>
+<script src="/assets/scripts/app/my-app-lib.js"></script>
+<script src="/assets/scripts/app/my-app-mainjs"></script>
 ```
 
 Turns into this with `load.js`:
 ```js
-load.setBaseUrl("/scripts/");
+load.setBaseUrl("/assets/scripts/");
 load("analytics.js")
-    .then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
-load.when("jquery.js", { plugins: ["jquery/jquery-plugin1.js", "jquery/jquery-plugin2.js", "jquery/jquery-plugin3.js"] });
+    .then({ libs: ["lib/jquery.js", "lib/other-lib.js", "lib/another-lib.js"] });
+load.when("jquery.js", { plugins: ["lib/jquery-plugin1.js", "lib/jquery-plugin2.js"] });
 load.when(["libs", "plugins"], "app/my-app-lib.js");
 load.when("my-app-lib.js", "app/my-app-main.js");
 ```
@@ -94,10 +93,10 @@ A declaration file `load.d.ts` is provided. Given the recommended usage, you don
 
 We'll discuss the API using our initial example:
 ```js
-load.setBaseUrl("/scripts/");
+load.setBaseUrl("/assets/scripts/");
 load("analytics.js")
-    .then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
-load.when("jquery.js", { plugins: ["jquery/jquery-plugin1.js", "jquery/jquery-plugin2.js", "jquery/jquery-plugin3.js"] });
+    .then({ libs: ["lib/jquery.js", "lib/other-lib.js", "lib/another-lib.js"] });
+load.when("jquery.js", { plugins: ["lib/jquery-plugin1.js", "lib/jquery-plugin2.js"] });
 load.when(["libs", "plugins"], "app/my-app-lib.js");
 load.when("my-app-lib.js", "app/my-app-main.js");
 ```
@@ -110,7 +109,12 @@ function setBaseUrl(path: string): void
 
 Prepends this path to all load requests from the point it was called onward.
 
-So given `load.setBaseUrl("/scripts/");`, `load("analytics.js")` will load `/scripts/analytics.js`.
+So...
+```js
+load.setBaseUrl("/assets/scripts/");
+load("analytics.js");
+```
+...Will load `/assets/scripts/analytics.js`.
 
 Note that this is literally just doing a string concatenation, so make sure your slashes are in the right spot:
 
@@ -154,9 +158,9 @@ The arguments to `then()` are the same as those to `load()` with the addition of
 You can use it to ensure dependencies are loaded by only loading files after completion of the ones preceding it.
 ```js
 load("analytics.js")
-    .then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
+    .then({ libs: ["lib/jquery.js", "lib/other-lib.js", "lib/another-lib.js"] });
 ```
-The above will load `jquery/jquery.js`, `other-library.js`, and `yet-another-library.js` in parallel **after** `analytics.js` has completed.
+The above will load `lib/jquery.js`, `lib/other-lib.js`, and `lib/another-lib.js` in parallel **after** `analytics.js` has completed.
 
 You can chain `then()` calls as much as you'd like:
 ```js
@@ -183,10 +187,10 @@ load("check-for-things.js").then(function()
 You can provide a label to single files or to arrays of files to make it easier to reference for dependency management.
 ```js
 load("analytics.js")
-    .then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
+    .then({ libs: ["lib/jquery.js", "lib/other-lib.js", "lib/another-lib.js"] });
 ```
 
-The above now let's us reference `libs` when we want to ensure that all three of `jquery/jquery.js`, `other-library.js`, and `yet-another-library.js` have completed loading without having to repeatedly type all three file paths out.
+The above now let's us reference `libs` when we want to ensure that all three of `lib/jquery.js`, `lib/other-lib.js`, and `lib/another-lib.js` have completed loading without having to repeatedly type all three file paths out.
 
 This works for single files as well:
 ```js
@@ -216,20 +220,20 @@ Dependencies are either file names or labels, and multiple dependencies can be p
 
 ```js
 load("analytics.js")
-    .then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
-load.when("jquery.js", { plugins: ["jquery/jquery-plugin1.js", "jquery/jquery-plugin2.js", "jquery/jquery-plugin3.js"] });
+    .then({ libs: ["lib/jquery.js", "lib/other-lib.js", "lib/another-lib.js"] });
+load.when("jquery.js", { plugins: ["lib/jquery-plugin1.js", "lib/jquery-plugin2.js"] });
 load.when(["libs", "plugins"], "app/my-app-lib.js");
 ```
 
-Note that we load `jquery/jquery.js` but only use `jquery.js` in the first call to `when()`. And the second call to `when()` lists two dependencies, `libs`, and `plugins`, both of which are labels.
+Note that we load `lib/jquery.js` but only use `jquery.js` in the first call to `when()`. And the second call to `when()` lists two dependencies, `libs`, and `plugins`, both of which are labels.
 
 You can also call `when()` at any point in your code, even prior to the file being loaded. For example, the following is completely fine and will load everything in the right order:
 
 ```js
 load.when(["libs", "plugins"], "app/my-app-lib.js");
-load.when("jquery.js", { plugins: ["jquery/jquery-plugin1.js", "jquery/jquery-plugin2.js", "jquery/jquery-plugin3.js"] });
+load.when("jquery.js", { plugins: ["lib/jquery-plugin1.js", "lib/jquery-plugin2.js"] });
 load("analytics.js")
-    .then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
+    .then({ libs: ["lib/jquery.js", "lib/other-lib.js", "lib/another-lib.js"] });
 ```
 
 ### Set query string arguments
