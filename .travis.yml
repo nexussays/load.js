@@ -9,6 +9,7 @@ node_js:
 #  fast_finish: true
 before_install:
   - npm install -g grunt-cli
+  - sudo npm install -g tapedeck
 #  - mkdir -p .travis
 #  - curl -s https://codeload.github.com/rtc-io/webrtc-testing-on-travis/tar.gz/master | tar -xz --strip-components=1 --directory .travis
 #  - ./.travis/setup.sh
