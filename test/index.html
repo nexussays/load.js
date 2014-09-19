@@ -1,0 +1,36 @@
+﻿<!DOCTYPE HTML>
+<html lang="en-us">
+   <head>
+      <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+      <title>load.js</title>
+      <script>
+         var doLog = console.log;
+         var doError = console.error;
+         console.log = function()
+         {
+            doLog.apply( console, arguments );
+            var pre = document.createElement( "code" );
+            for(var x = 0; x < arguments.length; ++x)
+            {
+               pre.appendChild( document.createTextNode( arguments[x]) );
+            }
+            document.getElementById( "body" ).appendChild( pre ).appendChild( document.createElement( "br" ) );
+         }
+         console.error = function()
+         {
+            doError.apply( console, arguments );
+            var pre = document.createElement( "code" );
+            for( var x = 0; x < arguments.length; ++x )
+            {
+               pre.appendChild( document.createTextNode( arguments[x] ) );
+            }
+            pre.setAttribute( "style", "background-color:#fcc" );
+            document.getElementById( "body" ).appendChild( pre ).appendChild( document.createElement( "br" ) );
+         }
+      </script>
+      <script src="./test-bundled.js"></script>
+   </head>
+   <body id="body">
+      <hr />
+   </body>
+</html>

@@ -1,0 +1,1 @@
+var multi3 = true;

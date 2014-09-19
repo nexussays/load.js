@@ -1,0 +1,1 @@
+var multi2 = true;

@@ -1,0 +1,1 @@
+var multi4 = true;

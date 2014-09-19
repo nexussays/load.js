@@ -13,7 +13,8 @@ module.exports = function(grunt)
    grunt.registerTask( "default", ["build"] );
    grunt.registerTask( "build", ["ts:build", "wrap"] );
    grunt.registerTask( "package", ["build", "uglify", "sync:declaration"] );
-   grunt.registerTask( "complete", ["clean", "package"] );
+   grunt.registerTask( "test", ["browserify:tests"] );
+   grunt.registerTask( "complete", ["clean", "package", "test"] );
    grunt.registerTask( "tag", ["gittag"] );
    grunt.registerMultiTask( "wrap", function()
    {
@@ -47,7 +48,7 @@ module.exports = function(grunt)
          {
             var json = grunt.file.readJSON( file );
             json.version = semver.inc( json.version, type );
-            grunt.file.write( file, JSON.stringify( json, null, arguments.length > 1 ? parseInt( arguments[1] ) : 3 ) );
+            grunt.file.write( file, JSON.stringify( json, null, arguments.length > 1 ? parseInt( arguments[1] ) : 4 ) );
             grunt.log.writeln( "Updated " + file + " to " + json.version );
          }
       } );
@@ -103,7 +104,7 @@ module.exports = function(grunt)
       },
 
       browserify: {
-         all: {
+         target: {
             src: "<%= paths.compiled %>**/*.js",
             dest: "<%= paths.dist %>load.browserify.js",
             options: {
@@ -111,6 +112,10 @@ module.exports = function(grunt)
                   standalone: "load"
                }
             }
+         },
+         tests: {
+            src: ["./test/*.js", "!./test/test-bundled.js"],
+            dest: "./test/test-bundled.js",
          }
       },
 
@@ -153,13 +158,14 @@ module.exports = function(grunt)
       clean: {
          src: [
             ".tscache",
-            "**/.baseDir.ts",
+            "./**/.baseDir.ts",
             "<%= paths.compiled %>**/*.js.map",
             "<%= paths.compiled %>**/*.js",
             "<%= paths.compiled %>**/*.d.ts",
             "<%= paths.src %>**/*.js.map",
             "<%= paths.src %>**/*.js",
             "<%= paths.src %>**/*.d.ts",
+            "<%= browserify.tests.dest %>",
          ]
       }
    } );

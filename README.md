@@ -46,7 +46,7 @@ There are a lot of other script loaders out there ([LABjs](https://github.com/ge
 
 ## Browser Support
 
-Don't know, haven't tested yet, but pretty sure IE > 8.
+![https://ci.testling.com/nexussays/load.js.png](https://ci.testling.com/nexussays/load.js)
 
 ## Usage
 
@@ -127,6 +127,7 @@ load("analytics.js");
 Note that this is literally just doing a string concatenation, so make sure your slashes are in the right spot:
 
 * `load.setBaseUrl("/scripts/");load("/foo.js")` will load `/scripts//foo.js`
+* `load.setBaseUrl("/scripts/");load("./foo.js")` will load `/scripts/./foo.js`
 * `load.setBaseUrl("/scripts");load("foo.js")` will load `/scriptsfoo.js`
 
 ### Loading files in parallel
