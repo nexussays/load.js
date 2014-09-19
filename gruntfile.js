@@ -4,6 +4,7 @@ module.exports = function(grunt)
    grunt.loadNpmTasks( "grunt-browserify" );
    grunt.loadNpmTasks( 'grunt-contrib-uglify' );
    grunt.loadNpmTasks( 'grunt-contrib-clean' );
+   grunt.loadNpmTasks( 'grunt-git' );
 
    //
    // tasks
@@ -12,6 +13,7 @@ module.exports = function(grunt)
    grunt.registerTask( "build", ["ts:build", "wrap" /*, "browserify"*/] );
    grunt.registerTask( "package", ["build", "uglify"] );
    grunt.registerTask( "complete", ["clean", "package"] );
+   grunt.registerTask( "tag", ["gittag"] );
    grunt.registerMultiTask( "wrap", function()
    {
       var file = grunt.file.read( this.data.src ).toString();
@@ -19,7 +21,7 @@ module.exports = function(grunt)
          this.data.header + file.replace( this.data.remove, "" ) + this.data.footer,
          'utf-8' );
    } );
-   grunt.registerTask( "version", function(type)
+   grunt.registerTask( "version", "Increment package version.", function(type)
    {
       var semver = require( 'semver' );
       var typeValid = /major|minor|patch/.test( type );
@@ -105,6 +107,7 @@ module.exports = function(grunt)
             banner: "/**!\n" +
                " * https://github.com/nexussays/load.js\n" +
                " * Copyright Malachi Griffie\n" +
+               " * @version <%= grunt.file.readJSON( 'package.json' ).version %>\n" +
                " * @license http://mozilla.org/MPL/2.0/\n" +
                " */\n",
             mangle: true,
@@ -125,6 +128,14 @@ module.exports = function(grunt)
                   }
                }
             ]
+         }
+      },
+
+      gittag: {
+         task: {
+            options: {
+               tag: "<%= grunt.file.readJSON( 'package.json' ).version %>"
+            }
          }
       },
 
