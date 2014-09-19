@@ -4,7 +4,7 @@
 
 ---
 
-Using script tags is bad for three primary reasons:
+Using script tags has three primary problems:
 
 1. Your dependencies are defined external to your code.
 2. Script loading will block other scripts, CSS, and images in most cases.

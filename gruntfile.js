@@ -9,7 +9,7 @@ module.exports = function(grunt)
    // tasks
    //
    grunt.registerTask( "default", ["build"] );
-   grunt.registerTask( "build", ["ts:build", "wrap", "browserify"] );
+   grunt.registerTask( "build", ["ts:build", "wrap"/*, "browserify"*/] );
    grunt.registerTask( "package", ["build", "uglify"] );
    grunt.registerTask( "complete", ["clean", "package"] );
    grunt.registerMultiTask( "wrap", function()
