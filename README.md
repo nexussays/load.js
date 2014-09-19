@@ -4,9 +4,9 @@
 
 `load.js` provides an easy and robust API to let you manage your script dependencies in your code instead of an external HTML file and then asynchronously load Javascript files in parallel without blocking CSS, images, or other scripts.
 
-# Why load.js?
+## Why load.js?
 
-## Instead of script tags
+### Instead of script tags
 
 Using script tags has three primary problems:
 
@@ -40,13 +40,13 @@ Hopefully the API is simple enough that the above is self-explanatory.
 
 Your dependencies are now explicitly defined, and your scripts will load in parallel -- saving significant load time for your users and getting them into your app/website quicker.
 
-## Instead of other script loaders
+### Instead of other script loaders
 
 There are a lot of other script loaders out there ([LABjs](https://github.com/getify/LABjs), [headjs](https://github.com/headjs/headjs), and [script.js](https://github.com/ded/script.js/) to name a few) but they either do **way** too much, or I just didn't like the API they provided.
 
 ## Browser Support
 
-![https://ci.testling.com/nexussays/load.js.png](https://ci.testling.com/nexussays/load.js)
+[![Testing Results](https://ci.testling.com/nexussays/load.js.png)](https://ci.testling.com/nexussays/load.js)
 
 ## Usage
 
