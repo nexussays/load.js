@@ -5,7 +5,7 @@
   "license": "MPL",
   "description": "A small, comprehensive script loader for Javascript and TypeScript",
   "homepage": "https://github.com/nexussays/load.js",
-  "main": "dist/load.js",
+  "main": "dist/load.min.js",
   "keywords": [
     "loader",
     "script-loader"
