@@ -5,13 +5,14 @@ module.exports = function(grunt)
    grunt.loadNpmTasks( 'grunt-contrib-uglify' );
    grunt.loadNpmTasks( 'grunt-contrib-clean' );
    grunt.loadNpmTasks( 'grunt-git' );
+   grunt.loadNpmTasks( 'grunt-sync' );
 
    //
    // tasks
    //
    grunt.registerTask( "default", ["build"] );
-   grunt.registerTask( "build", ["ts:build", "wrap" /*, "browserify"*/] );
-   grunt.registerTask( "package", ["build", "uglify"] );
+   grunt.registerTask( "build", ["ts:build", "wrap"] );
+   grunt.registerTask( "package", ["build", "uglify", "sync:declaration"] );
    grunt.registerTask( "complete", ["clean", "package"] );
    grunt.registerTask( "tag", ["gittag"] );
    grunt.registerMultiTask( "wrap", function()
@@ -46,7 +47,7 @@ module.exports = function(grunt)
          {
             var json = grunt.file.readJSON( file );
             json.version = semver.inc( json.version, type );
-            grunt.file.write( file, JSON.stringify(json, null, arguments.length > 1 ? parseInt(arguments[1]) : 3) );
+            grunt.file.write( file, JSON.stringify( json, null, arguments.length > 1 ? parseInt( arguments[1] ) : 3 ) );
             grunt.log.writeln( "Updated " + file + " to " + json.version );
          }
       } );
@@ -87,6 +88,17 @@ module.exports = function(grunt)
                "})" +
                "('load', function () {\n",
             footer: "\nreturn load;\n});"
+         }
+      },
+
+      sync: {
+         declaration: {
+            cwd: "<%= paths.compiled %>",
+            src: "**/*.d.ts",
+            dest: "<%= paths.dist %>",
+            verbose: true,
+            updateAndDelete: false,
+            expand: true
          }
       },
 

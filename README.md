@@ -1,8 +1,8 @@
-﻿# load.js
+﻿[![Build Status](https://travis-ci.org/nexussays/load.js.svg?branch=master)](https://travis-ci.org/nexussays/load.js)
+
+# load.js
 
 `load.js` provides an easy and robust API to let you manage your script dependencies in your code instead of an external HTML file and then asynchronously load Javascript files in parallel without blocking CSS, images, or other scripts.
-
-[![Build Status](https://travis-ci.org/nexussays/load.js.svg?branch=master)](https://travis-ci.org/nexussays/load.js)
 
 ---
 
