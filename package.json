@@ -18,14 +18,14 @@
         "url": "https://github.com/nexussays/load.js.git"
     },
     "scripts": {
-        "test": "tapedeck test/*.js -p"
+        "test": "testling -x ./.travis/start-$BROWSER.sh"
     },
     "testling": {
         "files": "test/*.js",
         "browsers": [
-            "ie/6..latest",
+            "ie/8..latest",
             "chrome/22..latest",
-            "firefox/16..latest",
+            "firefox/22..latest",
             "safari/latest",
             "opera/11.0..latest",
             "iphone/6",
@@ -45,6 +45,6 @@
         "grunt-ts": "^1.11.13",
         "semver": "^3.0.1",
         "tape": "^3.0.0",
-        "tapedeck": "^0.3.4"
+        "testling": "^1.7.0"
     }
 }
