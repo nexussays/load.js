@@ -7,7 +7,7 @@
     "authors": [
         "Malachi Griffie <malachi@nexussays.com>"
     ],
-    "main": "dist/load.js",
+    "main": "dist/load.min.js",
     "moduleType": [
         "amd",
         "globals",

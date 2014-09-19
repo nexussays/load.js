@@ -105,8 +105,7 @@ module.exports = function(grunt)
       uglify: {
          options: {
             banner: "/**!\n" +
-               " * https://github.com/nexussays/load.js\n" +
-               " * Copyright Malachi Griffie\n" +
+               " * https://github.com/nexussays/load.js | Copyright Malachi Griffie\n" +
                " * @version <%= grunt.file.readJSON( 'package.json' ).version %>\n" +
                " * @license http://mozilla.org/MPL/2.0/\n" +
                " */\n",
@@ -149,7 +148,6 @@ module.exports = function(grunt)
             "<%= paths.src %>**/*.js.map",
             "<%= paths.src %>**/*.js",
             "<%= paths.src %>**/*.d.ts",
-            "<%= paths.dist %>"
          ]
       }
    } );
