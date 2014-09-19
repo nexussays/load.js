@@ -24,9 +24,10 @@ So this:
 ```
 
 Turns into this with `load.js`:
-```javascript
+```js
 load.setBaseUrl("/scripts/");
-load("analytics.js").then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
+load("analytics.js")
+    .then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
 load.when("jquery.js", { plugins: ["jquery/jquery-plugin1.js", "jquery/jquery-plugin2.js", "jquery/jquery-plugin3.js"] });
 load.when(["libs", "plugins"], "app/my-app-lib.js");
 load.when("my-app-lib.js", "app/my-app-main.js");
@@ -44,11 +45,7 @@ Don't know, haven't tested yet, but pretty sure IE > 8.
 
 To save on an HTTP request and keep Javascript out of your HTML, recommended usage is to define your project's dependencies (such as in the example above) in a single config file and concatenate that file to the end of `load.js` as part of your build process, often renaming the file to `init.js` or similar in the process.
 
-Then simply add a single script tag to `<head>` in your HTML:
-```html
-<!-- Here, we've concatenated our dependencies to the end of load.js and named the new file init.js -->
-<script src="init.js"></script>
-```
+Then simply add a single script tag to `<head>` in your HTML.
 
 ### Without a build process in place
 
@@ -68,7 +65,7 @@ load( "thing.js" ).then( "otherthing.js" );
 It is entirely possible to define your dependencies in your code instead of a singular configuration file, though this is generally not recommended since a proper build process will be combining your various source files into different output files.
 
 The result looks similar to an AMD definition:
-```javascript
+```js
 /// dependency1.js
 var foo = "foo";
 
@@ -96,9 +93,10 @@ A declaration file `load.d.ts` is provided. Given the recommended usage, you don
 ## API / Examples
 
 We'll discuss the API using our initial example:
-```javascript
+```js
 load.setBaseUrl("/scripts/");
-load("analytics.js").then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
+load("analytics.js")
+    .then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
 load.when("jquery.js", { plugins: ["jquery/jquery-plugin1.js", "jquery/jquery-plugin2.js", "jquery/jquery-plugin3.js"] });
 load.when(["libs", "plugins"], "app/my-app-lib.js");
 load.when("my-app-lib.js", "app/my-app-main.js");
@@ -106,7 +104,7 @@ load.when("my-app-lib.js", "app/my-app-main.js");
 
 ### Setting a root path
 
-```typescript
+```ts
 function setBaseUrl(path: string): void
 ```
 
@@ -121,27 +119,27 @@ Note that this is literally just doing a string concatenation, so make sure your
 
 ### Loading files in parallel
 
-```typescript
+```ts
 function load(file: string): promise;
 function load(fileWithLabel: any): promise;
 function load(...files: any[]): promise;
 ```
 
 Provide as many file names (strings) as you'd like and they will all be loaded in parallel:
-```javascript
+```js
 load("analytics.js"/*, "foo.js", "bar.js", "baz.js", etc... */);
 ```
 
 You can also pass an array, which is useful if you're calling load dynamically from other code and prevents the need to call `.apply()`
-```javascript
+```js
 var dependencies = ["foo.js", "bar.js", "baz.js"];
 load(dependencies);
 ```
 
-## Loading files, or executing code, sequentially
+### Loading files, or executing code, sequentially
 
 This is the type returned from `load()`:
-```typescript
+```ts
 interface promise
 {
    then(callback: () => void): promise;
@@ -154,13 +152,14 @@ interface promise
 The arguments to `then()` are the same as those to `load()` with the addition of accepting functions.
 
 You can use it to ensure dependencies are loaded by only loading files after completion of the ones preceding it.
-```javascript
-load("analytics.js").then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
+```js
+load("analytics.js")
+    .then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
 ```
 The above will load `jquery/jquery.js`, `other-library.js`, and `yet-another-library.js` in parallel **after** `analytics.js` has completed.
 
 You can chain `then()` calls as much as you'd like:
-```javascript
+```js
 load("a.js").then("b.js").then("c.js").then("d.js").then("e.js").then(function()
 {
    console.log("a, b, c, d, and e have all been loaded");
@@ -168,7 +167,7 @@ load("a.js").then("b.js").then("c.js").then("d.js").then("e.js").then(function()
 ```
 
 This can be especially useful to load some ability-checking library and load further files depending on the results:
-```javascript
+```js
 load("check-for-things.js").then(function()
 {
    if(!CheckForThings.websockets)
@@ -182,20 +181,21 @@ load("check-for-things.js").then(function()
 ### Labels
 
 You can provide a label to single files or to arrays of files to make it easier to reference for dependency management.
-```javascript
-load("analytics.js").then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
+```js
+load("analytics.js")
+    .then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
 ```
 
 The above now let's us reference `libs` when we want to ensure that all three of `jquery/jquery.js`, `other-library.js`, and `yet-another-library.js` have completed loading without having to repeatedly type all three file paths out.
 
 This works for single files as well:
-```javascript
+```js
 load({ awesome: "really-awesome-library-v2.14.1932-beta3.min.js" });
 ```
 
 ### Loading files, or executing code, on completion of certain items
 
-```typescript
+```ts
 // when complete trigger a callback
 function when(dependency: string, callback: () => void, waiting?: (missing: string[]) => void): void;
 function when(dependencies: string[], callback: () => void, waiting?: (missing: string[]) => void): void;
@@ -214,25 +214,27 @@ Use `load.when()` to wait for specific dependencies to then load further files o
 
 Dependencies are either file names or labels, and multiple dependencies can be provided.
 
-```javascript
-load("analytics.js").then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
+```js
+load("analytics.js")
+    .then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
 load.when("jquery.js", { plugins: ["jquery/jquery-plugin1.js", "jquery/jquery-plugin2.js", "jquery/jquery-plugin3.js"] });
 load.when(["libs", "plugins"], "app/my-app-lib.js");
 ```
 
-Note that we load `jquery/jquery.js` but only use `jquery.js` in the first call to `when()`. And the second call to when lists two dependencies, `libs`, and `plugins`, both of which are labels.
+Note that we load `jquery/jquery.js` but only use `jquery.js` in the first call to `when()`. And the second call to `when()` lists two dependencies, `libs`, and `plugins`, both of which are labels.
 
 You can also call `when()` at any point in your code, even prior to the file being loaded. For example, the following is completely fine and will load everything in the right order:
 
-```javascript
+```js
 load.when(["libs", "plugins"], "app/my-app-lib.js");
 load.when("jquery.js", { plugins: ["jquery/jquery-plugin1.js", "jquery/jquery-plugin2.js", "jquery/jquery-plugin3.js"] });
-load("analytics.js").then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
+load("analytics.js")
+    .then({ libs: ["jquery/jquery.js", "other-library.js", "yet-another-library.js"] });
 ```
 
 ### Set query string arguments
 
-```typescript
+```ts
 function setQuerystring(args: string): void
 ```
 
