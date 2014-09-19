@@ -1,6 +1,4 @@
-﻿[![Build Status](https://travis-ci.org/nexussays/load.js.svg?branch=master)](https://travis-ci.org/nexussays/load.js)
-
-![Bower Package](https://badge.fury.io/bo/load.js.svg)
+[![Build Status](https://travis-ci.org/nexussays/load.js.svg?branch=master)](https://travis-ci.org/nexussays/load.js) ![Bower Package](https://badge.fury.io/bo/load.js.svg)
 
 # load.js
 
