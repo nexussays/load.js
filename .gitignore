@@ -1,0 +1,11 @@
+.DS_Store
+Thumbs.db
+bin/
+dist/
+obj/
+node_modules/
+*.user
+*.suo
+*.map
+.tscache/
+.baseDir.ts
