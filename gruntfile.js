@@ -140,9 +140,15 @@ module.exports = function(grunt)
       },
 
       gittag: {
-         task: {
+         options: {
+            tag: "<%= grunt.file.readJSON( 'package.json' ).version %>"
+         },
+         main: {
+            
+         },
+         dist: {
             options: {
-               tag: "<%= grunt.file.readJSON( 'package.json' ).version %>"
+               cwd: "<%= paths.dist %>",
             }
          }
       },
