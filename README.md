@@ -2,11 +2,11 @@
 
 # load.js
 
-`load.js` provides an easy and robust API to let you manage your script dependencies in your code instead of an external HTML file and then asynchronously load Javascript files in parallel without blocking CSS, images, or other scripts.
+`load.js` is a script loader written in TypeScript. It provides an easy and robust API to let you manage your script dependencies in your code instead of an external HTML file and asynchronously load them in parallel without blocking CSS, images, or other scripts.
 
 ## Why load.js?
 
-### Instead of script tags
+### ...Instead of script tags
 
 Using script tags has three primary problems:
 
@@ -23,7 +23,7 @@ So this:
 <script src="/assets/scripts/lib/jquery-plugin1.js"></script>
 <script src="/assets/scripts/lib/jquery-plugin2.js"></script>
 <script src="/assets/scripts/app/my-app-lib.js"></script>
-<script src="/assets/scripts/app/my-app-mainjs"></script>
+<script src="/assets/scripts/app/my-app-main.js"></script>
 ```
 
 Turns into this with `load.js`:
@@ -36,13 +36,13 @@ load.when(["libs", "plugins"], "app/my-app-lib.js");
 load.when("my-app-lib.js", "app/my-app-main.js");
 ```
 
-Hopefully the API is simple enough that the above is self-explanatory.
+Hopefully the API is simple enough that the above is self-explanatory; if not, explanation and further examples are provided below.
 
 Your dependencies are now explicitly defined, and your scripts will load in parallel -- saving significant load time for your users and getting them into your app/website quicker.
 
-### Instead of other script loaders
+### ...Instead of other script loaders
 
-There are a lot of other script loaders out there ([LABjs](https://github.com/getify/LABjs), [headjs](https://github.com/headjs/headjs), and [script.js](https://github.com/ded/script.js/) to name a few) but they either do **way** too much, or I just didn't like the API they provided.
+There are a lot of other script loaders out there ([LABjs](https://github.com/getify/LABjs), [headjs](https://github.com/headjs/headjs), and [script.js](https://github.com/ded/script.js/) to name a few) but they either do **way** too much, or I didn't like the API they provided.
 
 ## Browser Support
 
@@ -83,6 +83,7 @@ load.when("dependency1.js", function()
    {
       return foo + "bar";
    }
+   window.bar = bar;
 });
 
 /// file1.js
@@ -95,7 +96,7 @@ load.when(["dependency1.js", "dependency2.js"], function()
 
 ### Using with TypeScript
 
-A declaration file `load.d.ts` is provided. Given the recommended usage, you don't need to import/require anything. Simple add a reference `/// <reference path="load.d.ts"/>` in any files that need to call `load`.
+A declaration file `load.d.ts` is provided. Given the recommended usage, you don't need to import/require anything. Simple add a reference `/// <reference path="load.d.ts"/>` to your configuration file (or to any files that need to call `load` if you're not using the recommended single-configuration-file approach).
 
 ## API / Examples
 
@@ -114,13 +115,7 @@ load.when("my-app-lib.js", "app/my-app-main.js");
 ```ts
 function setBaseUrl(path: string): void
 ```
-
 Prepends this path to all load requests from the point it was called onward.
-
-You an also set a `data-base-url` attribute in the script tag, which is useful if you have templates or otherwise generate this path depending on your environment.
-```html
-<script src="https://assets.domain.com/scripts/init.js" data-base-url="https://assets.domain.com/scripts/"></script>
-```
 
 So...
 ```js
@@ -129,7 +124,17 @@ load("analytics.js");
 ```
 ...Will load `/assets/scripts/analytics.js`.
 
-Note that this is literally just doing a string concatenation, so make sure your slashes are in the right spot:
+You an also set a root path with a [`data-*`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes#data-*) attribute `data-base-url` in the script tag.
+```html
+<script src="https://assets.domain.com/scripts/init.js"
+        data-base-url="https://assets.domain.com/scripts/">
+</script>
+```
+This is useful if you generate the path to your scripts dynamically depending on your deployment environment.
+
+#### Note
+
+Note that setting this is literally just doing a string concatenation, no path manipulation is performed; so make sure your slashes are in the right spot:
 
 * `load.setBaseUrl("/scripts/");load("/foo.js")` will load `/scripts//foo.js`
 * `load.setBaseUrl("/scripts/");load("./foo.js")` will load `/scripts/./foo.js`

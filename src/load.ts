@@ -14,10 +14,10 @@ var querystring: string;
 
 // on startup, try to find our script tag and see if there is a data-base-url attribute set
 var attr = "data-base-url";
-var us = document.querySelector("script[" + attr +"]" );
+var us = <HTMLScriptElement>document.querySelector("script[" + attr +"]" );
 if(us)
 {
-   root = (<HTMLScriptElement>us).getAttribute(attr);
+   root = us.getAttribute(attr);
 }
 
 function load(file: string): load.Promise;
