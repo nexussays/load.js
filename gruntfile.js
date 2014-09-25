@@ -42,13 +42,14 @@ module.exports = function(grunt)
          return;
       }
 
-      ["package.json", "bower.json"].forEach( function(file)
+      var padding = arguments.length > 1 && !isNaN( parseInt( arguments[1] ) ) ? parseInt( arguments[1] ) : 4;
+      grunt.file.expand(["**/package.json", "**/bower.json", "!node_modules/**", "!/bower_components/"]).forEach( function( file )
       {
          if(grunt.file.isFile( file ))
          {
             var json = grunt.file.readJSON( file );
             json.version = semver.inc( json.version, type );
-            grunt.file.write( file, JSON.stringify( json, null, arguments.length > 1 ? parseInt( arguments[1] ) : 4 ) );
+            grunt.file.write( file, JSON.stringify( json, null, padding ) );
             grunt.log.writeln( "Updated " + file + " to " + json.version );
          }
       } );
