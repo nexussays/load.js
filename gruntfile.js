@@ -104,15 +104,6 @@ module.exports = function(grunt)
       },
 
       browserify: {
-         target: {
-            src: "<%= paths.compiled %>**/*.js",
-            dest: "<%= paths.dist %>load.browserify.js",
-            options: {
-               browserifyOptions: {
-                  standalone: "load"
-               }
-            }
-         },
          tests: {
             src: ["./test/*.js", "!./test/test-bundled.js"],
             dest: "./test/test-bundled.js",

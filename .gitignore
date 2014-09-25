@@ -8,4 +8,4 @@ node_modules/
 *.map
 .tscache/
 .baseDir.ts
-dist/load.js
+test/test-bundled.js
