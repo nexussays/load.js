@@ -1,4 +1,4 @@
 [submodule "dist"]
 	path = dist
-	url = git@github.com:nexussays/load.js-dist.git
+	url = https://github.com/nexussays/load.js-dist.git
 	branch = master
