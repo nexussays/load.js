@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/nexussays/load.js.svg?branch=master)](https://travis-ci.org/nexussays/load.js) ![Bower Package](https://badge.fury.io/bo/load.js.svg)
+[![Build Status](https://travis-ci.org/nexussays/load.js.svg?branch=master)](https://travis-ci.org/nexussays/load.js) 
+
+[![Bower Package](https://badge.fury.io/bo/load.js.svg)](http://bower.io/search/?q=load.js) `bower install load.js`
 
 # load.js
 
