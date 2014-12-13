@@ -40,7 +40,41 @@ function load(...files: any[]): load.Promise
             remaining[label]++;
             //console.log( "loading " + path + " with label " + label );
             written[path] = true;
-            create( path, () => loadComplete( label ) );
+            //
+            // Write to head
+            //
+            var script = document.createElement( 'script' );
+            var isLoaded: boolean;
+            script.onload = script.onreadystatechange = function()
+            {
+               if(isLoaded || (script.readyState && !/^complete|loaded/.test(script.readyState)))
+               {
+                  return;
+               }
+               script.onload = script.onerror = script.onreadystatechange = null;
+               isLoaded = true;
+               //var lbl = getLabelFromFile(script.src);
+               if(--remaining[label] === 0)
+               {
+                  //console.log( "loadComplete " + label, remaining[label] );
+                  scanCallbacks();
+               }
+            };
+            script.onerror = function()
+            {
+               console.error(path);
+               script.onload = script.onerror = script.onreadystatechange = null;
+               if(--remaining[label] === 0)
+               {
+                  //console.log( "loadComplete " + label, remaining[label] );
+                  scanCallbacks();
+               }
+            };
+            script.async = true;
+            script.src = querystring ? path + (path.indexOf('?') === -1 ? '?' : '&') + querystring : path;
+
+            var head = document.getElementsByTagName('head')[0];
+            head.insertBefore(script, head.lastChild);
          }
       } );
    }
@@ -93,16 +127,6 @@ function tokenize(files: any[]): { labels: Array<string>; files: Array<Array<str
    return { labels: labelsToLoad, files: filesToLoad };
 }
 
-function loadComplete(label: string)
-{
-   remaining[label]--;
-   if(remaining[label] === 0)
-   {
-      //console.log( "loadComplete " + label, remaining[label] );
-      scanCallbacks();
-   }
-}
-
 function scanCallbacks()
 {
    // now see if there are other pending callbacks that can be run
@@ -153,39 +177,6 @@ function makePromise(dependencies: string[]): PrivatePromise
          return this;
       }
    };
-}
-
-function create(path: string, callback: () => void)
-{
-   //console.log( "create", path );
-   var script = document.createElement( 'script' ),
-       isLoaded: boolean;
-   script.onload = script.onreadystatechange = function()
-   {
-      if(isLoaded || (script.readyState && !/^complete|loaded/.test( script.readyState )))
-      {
-         return;
-      }
-      script.onload = script.onerror = script.onreadystatechange = null;
-      isLoaded = true;
-      var label = getLabelFromFile( script.src );
-      if(remaining[label] === undefined)
-      {
-         remaining[label] = 0;
-      }
-      callback();
-   };
-   script.onerror = function()
-   {
-      console.error( path );
-      script.onload = script.onerror = script.onreadystatechange = null;
-      callback();
-   };
-   script.async = true;
-   script.src = querystring ? path + (path.indexOf( '?' ) === -1 ? '?' : '&') + querystring : path;
-
-   var head = document.getElementsByTagName( 'head' )[0];
-   head.insertBefore( script, head.lastChild );
 }
 
 function defer(func)

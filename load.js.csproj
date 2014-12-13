@@ -52,7 +52,8 @@
     <Content Include="test\js\seq2.js" />
     <Content Include="test\js\seq3.js" />
     <Content Include="test\js\seq4.js" />
-    <None Include="bower.json" />
+    <Content Include="dist\bower.json" />
+    <Content Include="dist\README.md" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

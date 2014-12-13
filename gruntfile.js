@@ -83,7 +83,8 @@ module.exports = function(grunt)
             src: "<%= paths.compiled %>load.js",
             dest: "<%= paths.dist %>load.js",
             remove: "module.exports = load;",
-            header: "(function (name, factory) {\n" +
+            header: "<%= uglify.options.banner %>" +
+               "(function (name, factory) {\n" +
                "   if (typeof define === 'function' && define.amd) { define([], factory); }\n" +
                "   else if (typeof exports === 'object') { module.exports = factory(); }\n" +
                "   else { this[name] = factory(); }\n" +
