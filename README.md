@@ -16,24 +16,76 @@ Using script tags has three primary problems:
 
 So this:
 ```html
-<script src="/assets/scripts/analytics.js"></script>
-<script src="/assets/scripts/lib/jquery.js"></script>
-<script src="/assets/scripts/lib/other-lib.js"></script>
-<script src="/assets/scripts/lib/another-lib.js"></script>
-<script src="/assets/scripts/lib/jquery-plugin1.js"></script>
-<script src="/assets/scripts/lib/jquery-plugin2.js"></script>
-<script src="/assets/scripts/app/my-app-lib.js"></script>
-<script src="/assets/scripts/app/my-app-main.js"></script>
+<script src="assets/scripts/analytics.js"></script>
+<script src="assets/scripts/lib/jquery.js"></script>
+<script src="assets/scripts/lib/jquery-plugin1.js"></script>
+<script src="assets/scripts/lib/jquery-plugin2.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-sanitize.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-animate.min.js"></script>
+<script src="assets/scripts/lib/another-lib.js"></script>
+<script src="assets/scripts/app/my-app-lib.js"></script>
+<script src="assets/scripts/app/my-app-main.js"></script>
 ```
 
 Turns into this with `load.js`:
 ```js
-load.setBaseUrl("/assets/scripts/");
+load.setBaseUrl("assets/scripts/");
 load("analytics.js")
-    .then({ libs: ["lib/jquery.js", "lib/other-lib.js", "lib/another-lib.js"] });
-load.when("jquery.js", { plugins: ["lib/jquery-plugin1.js", "lib/jquery-plugin2.js"] });
-load.when(["libs", "plugins"], "app/my-app-lib.js");
+    .then({ libs: [
+               "lib/jquery.js",
+               "//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js",
+               "lib/another-lib.js"
+            ] });
+load.when("jquery.js", { jq: ["lib/jquery-plugin1.js", "lib/jquery-plugin2.js"] });
+load.when("angular.min.js",
+          { ng: [
+             "//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-sanitize.min.js",
+             "//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-animate.min.js"
+            ] });
+load.when(["libs", "plugins", "ng"], "app/my-app-lib.js");
 load.when("my-app-lib.js", "app/my-app-main.js");
+
+load.setBaseUrl("assets/scripts/");
+load("analytics.js")
+    .then({ libs: [
+               "lib/jquery.js",
+               "//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js",
+               "lib/another-lib.js"
+            ] });
+load.when("jquery.js")
+    .then({ jq: ["lib/jquery-plugin1.js", "lib/jquery-plugin2.js"] });
+load.when("angular.min.js")
+    .then({ ng: [
+             "//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-sanitize.min.js",
+             "//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-animate.min.js"
+            ] });
+load.when("libs", "jq", "ng")
+    .then("app/my-app-lib.js")
+    .then("app/my-app-main.js");
+
+load.setBaseUrl("assets/scripts/");
+var a = load("analytics.js");
+var jquery = a.then("lib/jquery.js")
+              .then("lib/jquery-plugin1.js", "lib/jquery-plugin2.js");
+var ng = a.then("//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js")
+          .then("//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-sanitize.min.js",
+                "//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-animate.min.js");
+load.when(jquery, ng, a.then("lib/another-lib.js"))
+    .then("app/my-app-lib.js")
+    .then("app/my-app-main.js");
+
+load.setBaseUrl("assets/scripts/");
+var a = load("analytics.js");
+var jquery = a.then("lib/jquery.js")
+              .then(["lib/jquery-plugin1.js", "lib/jquery-plugin2.js"]);
+var ng = a.then("//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js")
+          .else("lib/angular.min.js")
+          .then(["//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-sanitize.min.js",
+                "//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-animate.min.js"]);
+load.when(jquery, ng, a.then("lib/another-lib.js"))
+    .then("app/my-app-lib.js")
+    .then("app/my-app-main.js");
 ```
 
 Hopefully the API is simple enough that the above is self-explanatory; if not, explanation and further examples are provided below.
