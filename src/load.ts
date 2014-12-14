@@ -74,7 +74,7 @@ function load(...files: any[]): load.Promise
             script.src = querystring ? path + (path.indexOf('?') === -1 ? '?' : '&') + querystring : path;
 
             var head = document.getElementsByTagName('head')[0];
-            head.insertBefore(script, head.lastChild);
+            defer( head.insertBefore( script, head.lastChild ) );
          }
       } );
    }
