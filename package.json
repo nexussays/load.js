@@ -1,7 +1,7 @@
 {
     "name": "load.js",
     "author": "Malachi Griffie <malachi@nexussays.com>",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "license": "MPL",
     "description": "A small, comprehensive script loader for Javascript and TypeScript",
     "homepage": "https://github.com/nexussays/load.js",
